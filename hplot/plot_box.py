@@ -118,6 +118,7 @@ class PloterBox:
         plt.show()
 
     def close(self):
+        sns.set_theme(style="whitegrid")
         plt.close()
 
 
