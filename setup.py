@@ -1,0 +1,35 @@
+import os
+
+from setuptools import setup, find_packages
+
+import hplot
+
+
+def find_data_packages(where):
+    data_packages = []
+    for filepath, dirnames, filenames in os.walk(where):
+        filepath = filepath.replace("\\", "/") + "/*"
+        filepath = filepath[len(where) + 1 :]
+        data_packages.append(filepath)
+    return data_packages
+
+
+setup(
+    name="hplot",
+    version=hplot.__version__,
+    description="Some plot utils for research",
+    author="AeroH",
+    install_requires=[
+        "numpy==1.23.1",
+        "pytest==7.1.2",
+        "matplotlib==3.5.1",
+        "pandas==1.4.2",
+        "scipy==1.9.0",
+        "seaborn==0.11.2",
+        "wrapt==1.14.1",
+        "tabulate==0.8.10",
+        "psutil==5.9.1",
+        "tqdm"
+    ],
+    python_requires=">=3.8",
+)
