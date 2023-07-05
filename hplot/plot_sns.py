@@ -3,8 +3,8 @@ from matplotlib import rcParams
 import numpy as np
 
 import seaborn as sns
-from utils import cm2inch
-from config import default_cfg
+from hplot.utils import cm2inch
+from hplot.config import default_cfg
 
 
 class PloterSns:

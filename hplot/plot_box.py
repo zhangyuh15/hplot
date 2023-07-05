@@ -3,8 +3,8 @@ import matplotlib.colors as mcolors
 from itertools import cycle
 from matplotlib import rcParams
 
-from utils import cm2inch
-from config import default_cfg
+from hplot.utils import cm2inch
+from hplot.config import default_cfg
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt

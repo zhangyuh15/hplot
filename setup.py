@@ -1,22 +1,11 @@
 import os
 
-from setuptools import setup, find_packages
-
-import hplot
-
-
-def find_data_packages(where):
-    data_packages = []
-    for filepath, dirnames, filenames in os.walk(where):
-        filepath = filepath.replace("\\", "/") + "/*"
-        filepath = filepath[len(where) + 1 :]
-        data_packages.append(filepath)
-    return data_packages
+from setuptools import setup
 
 
 setup(
     name="hplot",
-    version=hplot.__version__,
+    version="0.0.1",
     description="Some plot utils for research",
     author="AeroH",
     install_requires=[
