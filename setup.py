@@ -8,6 +8,7 @@ setup(
     version="0.0.1",
     description="Some plot utils for research",
     author="AeroH",
+    author_email='zhang.yuh@outlook.com', 
     install_requires=[
         "numpy==1.23.1",
         "pytest==7.1.2",
