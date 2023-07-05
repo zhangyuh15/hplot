@@ -26,7 +26,7 @@ class PloterBox:
             usetex=False,
             dpi=None,
             pad=None,
-            theme="darkgrid",
+            theme=None,
             tick_size=None,
             tick_label_font=None,
             legend_font_dict=None,
@@ -84,8 +84,10 @@ class PloterBox:
             rc("text", usetex=True)
         
     def plot(self):
+        if self.theme is not None:
+            sns.set_theme(style=self.theme)
         self.fig, self.ax = plt.subplots(figsize=cm2inch(*self.fig_size), dpi=self.dpi)
-        sns.set_theme(style=self.theme)
+        
 
         data_dict = dict()
 
@@ -118,7 +120,7 @@ class PloterBox:
         plt.show()
 
     def close(self):
-        sns.set_theme(style="whitegrid")
+        sns.set_theme(style="white")
         plt.close()
 
 
@@ -135,7 +137,7 @@ def plot_box(
     usetex=False,
     dpi=None,
     pad=None,
-    theme="darkgrid",
+    theme=None,
     tick_size=None,
     tick_label_font=None,
     legend_font_dict=None,
@@ -149,6 +151,7 @@ def plot_box(
         fname (str, optional): figure save path. Defaults to None.
         width (float, optional): width of each box. Defaults to 0.5.
         linewidth (float, optional): linewidth of box boundary. Defaults to 1.0.
+        theme (str, optional): theme of seaborn. Defaults to None. darkgrid, whitegrid, dark, white, ticks
     """
     ploter = PloterBox(
         data,
