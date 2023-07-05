@@ -13,25 +13,25 @@ import pandas as pd
 
 class PloterBox:
     def __init__(
-            self,
-            data,
-            fname=None,
-            *,
-            width=0.5,
-            linewidth=1.0,
-            xlabel=None,
-            ylabel=None,
-            display=True,
-            fig_size=None,
-            usetex=False,
-            dpi=None,
-            pad=None,
-            theme=None,
-            tick_size=None,
-            tick_label_font=None,
-            legend_font_dict=None,
-            label_font_dict=None,
-            ) -> None:
+        self,
+        data,
+        fname=None,
+        *,
+        width=0.5,
+        linewidth=1.0,
+        xlabel=None,
+        ylabel=None,
+        display=True,
+        fig_size=None,
+        usetex=False,
+        dpi=None,
+        pad=None,
+        theme=None,
+        tick_size=None,
+        tick_label_font=None,
+        legend_font_dict=None,
+        label_font_dict=None,
+    ) -> None:
         self.data = data
         self.fname = fname
         self.width = width
@@ -51,7 +51,7 @@ class PloterBox:
 
         self.ax = None
         self.fig = None
-        self.__preprocess() 
+        self.__preprocess()
 
     def __preprocess(self):
         rcParams.update({"mathtext.fontset": "stix"})
@@ -82,12 +82,11 @@ class PloterBox:
 
             rc("font", **{"family": "serif", "serif": ["Times New Roman"]})
             rc("text", usetex=True)
-        
+
     def plot(self):
         if self.theme is not None:
             sns.set_theme(style=self.theme)
         self.fig, self.ax = plt.subplots(figsize=cm2inch(*self.fig_size), dpi=self.dpi)
-        
 
         data_dict = dict()
 
@@ -107,7 +106,7 @@ class PloterBox:
             plt.xlabel(self.xlabel, fontdict=self.label_font_dict)
         if self.ylabel is not None:
             plt.ylabel(self.ylabel, fontdict=self.label_font_dict)
-        
+
     def save(self):
         plt.tight_layout(pad=self.pad)
         if self.fname is None:
@@ -182,7 +181,6 @@ def plot_box(
     ploter.close()
 
 
-
 def test():
     d1 = np.random.randn(100)
     d2 = d1 * 0.8 + 0.5
@@ -199,5 +197,5 @@ if __name__ == "__main__":
     d1 = np.random.randn(100)
     d2 = d1 * 0.8 + 0.5
     data = [{"label": "a", "y": d1}, {"label": "b", "y": d2}]
-    
+
     plot_box(data, fname="test.png", display=True, width=0.2, linewidth=0.1)

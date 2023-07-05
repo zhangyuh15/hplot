@@ -1,4 +1,3 @@
-
 class AttrDict(dict):
     """
     A extended dict of which the keys can be used as attribution

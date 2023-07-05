@@ -119,7 +119,7 @@ class PloterSns:
     def plot(self):
         self.fig, self.ax = plt.subplots(figsize=cm2inch(*self.fig_size), dpi=self.dpi)
         # plot figure
-        for (i, d) in enumerate(self.data):
+        for i, d in enumerate(self.data):
             x, y, label = self._ppc_data(d)
             sns.lineplot(x=x, y=y, label=label)
 
@@ -188,7 +188,7 @@ def plot_sns(
     display=True,
     fig_size=None,
     dpi=None,
-    **kwargs
+    **kwargs,
 ):
     """
     plot a curve using seaborn
@@ -240,7 +240,7 @@ def plot_sns(
         display=display,
         fig_size=fig_size,
         dpi=dpi,
-        **kwargs
+        **kwargs,
     )
     ploter.plot()
     if fname is not None:

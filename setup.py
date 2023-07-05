@@ -8,7 +8,7 @@ setup(
     version="0.0.2",
     description="Some plot utils for research",
     author="AeroH",
-    author_email='zhang.yuh@outlook.com', 
+    author_email="zhang.yuh@outlook.com",
     install_requires=[
         "numpy==1.23.1",
         "pytest==7.1.2",
@@ -19,7 +19,7 @@ setup(
         "wrapt==1.14.1",
         "tabulate==0.8.10",
         "psutil==5.9.1",
-        "tqdm"
+        "tqdm",
     ],
     python_requires=">=3.8",
 )

@@ -105,7 +105,7 @@ class PloterPlt:
         self.fig, self.ax = plt.subplots(figsize=cm2inch(*self.fig_size), dpi=self.dpi)
 
         # plot figure
-        for (i, d) in enumerate(self.data):
+        for i, d in enumerate(self.data):
             plt.plot(d["x"], d["y"], color=self.color_list[i])
 
         # legend
