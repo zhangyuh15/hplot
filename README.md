@@ -2,8 +2,6 @@
 
 A plot package for myself
 
-
-
 # upload method
 
 ### Create `.pypirc`
@@ -23,7 +21,6 @@ password = 密码
 
 pip install build
 
-python -m build
 
 # or 
 
@@ -38,5 +35,5 @@ python -m build --wheel
 
 pip install twine
 
-twine check dist/*
+twine upload dist/*
 ```
