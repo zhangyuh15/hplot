@@ -1,5 +1,9 @@
 import numpy as np
 from hplot import plot_plt, plot_sns, plot_box
+import os
+
+os.makedirs("figure", exist_ok=True)
+
 
 x = np.linspace(-2, 2, 200)
 y1 = np.sin(2 * 3.14 * x)
@@ -9,7 +13,7 @@ data = [dict(x=x, y=y1), dict(x=x, y=y2)]
 
 plot_plt(
     data,
-    "plot_plt_example.png",
+    "figure/plot_plt_example.png",
     xlabel="x",
     ylabel="y",
     legend=["sin", "cos"],
@@ -36,7 +40,7 @@ y = np.stack([y1, y2, y3])
 data.append(dict(x=[x, x, x], y=[y1, y2, y3], label="cos"))
 plot_sns(
     data,
-    "plot_sns_example.png",
+    "figure/plot_sns_example.png",
     xlabel="x",
     ylabel="y",
     legend=["SIN-FUNC", "COS-FUNC"],
@@ -55,4 +59,4 @@ d1 = np.random.randn(100)
 d2 = d1 * 0.8 + 0.5
 data = [{"label": "a", "y": d1}, {"label": "b", "y": d2}]
 
-plot_box(data, fname="test.png", display=True, width=0.2, linewidth=0.1)
+plot_box(data, fname="figure/plot_box_example.png", display=True, width=0.2, linewidth=0.1)

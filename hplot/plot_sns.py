@@ -163,6 +163,7 @@ class PloterSns:
             plt.savefig(self.fname)
 
     def show(self):
+        self.fig.set_tight_layout(True)
         plt.tight_layout(pad=self.pad)
         plt.show()
 
