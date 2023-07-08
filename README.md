@@ -1,6 +1,6 @@
 # hplot
 
-A plot package for iDLab style
+A plot package in iDLab style
 
 # install 
 
