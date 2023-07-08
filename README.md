@@ -1,39 +1,10 @@
 # hplot
 
-A plot package for myself
+A plot package for iDLab style
 
-# upload method
+# install 
 
-### Create `.pypirc`
-
-```
-[distutils] 
-index-servers=pypi 
- 
-[pypi] repository = https://upload.pypi.org/legacy/ 
-username = 账户名 
-password = 密码
+```bash
+pip install hplot 
 ```
 
-### 打包
-
-```
-
-pip install build
-
-
-# or 
-
-python -m build --sdist
-python -m build --wheel
-
-```
-
-### 上传
-
-```
-
-pip install twine
-
-twine upload dist/*
-```
