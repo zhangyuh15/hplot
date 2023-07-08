@@ -25,3 +25,5 @@ def test_plot_plt():
         ytick_labels=["ystart", "yend"],
         display=False,
     )
+if __name__ == "__main__":
+    test_plot_plt()

@@ -49,7 +49,9 @@ class PloterBox:
         self.tick_label_font = tick_label_font
         self.legend_font_dict = legend_font_dict
         self.label_font_dict = label_font_dict
-
+        plt.cla()
+        plt.clf()
+        plt.close()
         self.ax = None
         self.fig = None
         self.__preprocess()

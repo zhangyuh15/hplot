@@ -12,6 +12,7 @@ setup(
     install_requires=[
         "numpy==1.25.0",
         "pytest==7.4.0",
+        "pytest-cov==4.1.0",
         "matplotlib==3.7.2",
         "pandas==2.0.3",
         "scipy==1.11.1",

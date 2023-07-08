@@ -65,7 +65,9 @@ class PloterPlt:
         self.num_data = None
         self.fig = None
         self.ax = None
-
+        plt.cla()
+        plt.clf()
+        plt.close()
         self.__preprocess()
 
     def __preprocess(self):
