@@ -9,6 +9,7 @@ setup(
     description="Some plot utils for research",
     author="AeroH",
     author_email="zhang.yuh@outlook.com",
+    packages=["hplot"],
     install_requires=[
         "numpy==1.25.0",
         "pytest==7.4.0",
