@@ -1,10 +1,12 @@
-import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
+import os
 from itertools import cycle
+
+import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
 from matplotlib import rcParams
 
-from hplot.utils import cm2inch
 from hplot.config import default_cfg
+from hplot.utils import cm2inch
 
 
 class PloterPlt:
@@ -134,6 +136,8 @@ class PloterPlt:
         if self.fname is None:
             pass
         else:
+            dir_path = os.path.dirname(self.fname)
+            os.makedirs(dir_path, exist_ok=True)
             plt.savefig(self.fname)
 
     def show(self):
@@ -214,29 +218,3 @@ def plot_plt(
         ploter.show()
 
     ploter.close()
-
-
-if __name__ == "__main__":
-    import numpy as np
-
-    x = np.linspace(-2, 2, 200)
-    y1 = np.sin(2 * 3.14 * x)
-    y2 = np.cos(2 * 3.14 * x)
-
-    data = [dict(x=x, y=y1), dict(x=x, y=y2)]
-
-    plot_plt(
-        data,
-        "plot_plt_example.png",
-        xlabel="x",
-        ylabel="y",
-        legend=["sin", "cos"],
-        legend_loc="lower right",
-        xlim=[-3, +3],
-        ylim=[-2, +2],
-        xticks=[-2, +2],
-        xtick_labels=["xstart", "xend"],
-        yticks=[-1, +1],
-        ytick_labels=["ystart", "yend"],
-        display=True,
-    )

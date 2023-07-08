@@ -1,14 +1,15 @@
-import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
+import os
 from itertools import cycle
+
+import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
 from matplotlib import rcParams
 
-from hplot.utils import cm2inch
 from hplot.config import default_cfg
-import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
-import pandas as pd
+from hplot.utils import cm2inch
 
 
 class PloterBox:
@@ -112,6 +113,8 @@ class PloterBox:
         if self.fname is None:
             pass
         else:
+            dir_path = os.path.dirname(self.fname)
+            os.makedirs(dir_path, exist_ok=True)
             plt.savefig(self.fname)
 
     def show(self):
@@ -180,23 +183,3 @@ def plot_box(
     if display:
         ploter.show()
     ploter.close()
-
-
-def test():
-    d1 = np.random.randn(100)
-    d2 = d1 * 0.8 + 0.5
-    sns.set_theme(style="darkgrid")
-    # plt.boxplot([d, d * 0.8 + 0.5], labels=["a", "b"])
-    # sns.boxplot(data=[d, d * 0.8 + 0.5], palette="Set3")
-    df = pd.DataFrame({"a": d1, "b": d2})
-    sns.boxplot(data=df)
-
-    plt.show()
-
-
-if __name__ == "__main__":
-    d1 = np.random.randn(100)
-    d2 = d1 * 0.8 + 0.5
-    data = [{"label": "a", "y": d1}, {"label": "b", "y": d2}]
-
-    plot_box(data, fname="test.png", display=True, width=0.2, linewidth=0.1)
