@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name="hplot",
-    version="0.0.2",
+    version="0.0.3",
     description="Some plot utils for research",
     author="AeroH",
     author_email="zhang.yuh@outlook.com",
