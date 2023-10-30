@@ -11,7 +11,7 @@ default_cfg = AttrDict()
 
 default_cfg.fig_size = (8.5, 6.5)
 default_cfg.dpi = 300
-default_cfg.pad = 0.4
+default_cfg.pad = 1
 
 default_cfg.tick_size = 8
 default_cfg.tick_label_font = "Times New Roman"

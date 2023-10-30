@@ -28,7 +28,7 @@ class PloterSns:
         xtick_labels=None,
         ytick_labels=None,
         usetex=False,
-        display=True,
+        display=False,
         fig_size=None,
         dpi=None,
         pad=None,
@@ -36,6 +36,7 @@ class PloterSns:
         tick_label_font=None,
         legend_font_dict=None,
         label_font_dict=None,
+        style="white",
     ):
         self.data = data
         self.fname = fname
@@ -66,6 +67,7 @@ class PloterSns:
         self.num_data = None
         self.fig = None
         self.ax = None
+        sns.set_style(style)
         self.__preprocess()
 
     def __preprocess(self):
@@ -160,12 +162,13 @@ class PloterSns:
             plt.yticks(self.yticks, self.ytick_labels)
 
     def save(self):
-        plt.tight_layout(pad=self.pad)
         if self.fname is None:
             pass
         else:
             dir_path = os.path.dirname(self.fname)
             os.makedirs(dir_path, exist_ok=True)
+            self.fig.set_tight_layout(True)
+            plt.tight_layout(pad=self.pad)
             plt.savefig(self.fname)
 
     def show(self):
@@ -195,6 +198,7 @@ def plot_sns(
     display=True,
     fig_size=None,
     dpi=None,
+    style="white",
     **kwargs,
 ):
     """
@@ -228,6 +232,7 @@ def plot_sns(
     :param fig_size:
     :param dpi:
     :param kwargs:
+    :style: "white", "dark", "whitegrid", "darkgrid"
     :return:
     """
     ploter = PloterSns(
@@ -247,6 +252,7 @@ def plot_sns(
         display=display,
         fig_size=fig_size,
         dpi=dpi,
+        style=style,
         **kwargs,
     )
     ploter.plot()
