@@ -37,6 +37,7 @@ class PloterSns:
         legend_font_dict=None,
         label_font_dict=None,
         style="white",
+        ticklabel_style=None,
     ):
         self.data = data
         self.fname = fname
@@ -61,6 +62,7 @@ class PloterSns:
         self.tick_label_font = tick_label_font
         self.legend_font_dict = legend_font_dict
         self.label_font_dict = label_font_dict
+        self.ticklabel_style = ticklabel_style
         plt.cla()
         plt.clf()
         plt.close()
@@ -160,7 +162,9 @@ class PloterSns:
             plt.xticks(self.xticks, self.xtick_labels)
         if self.yticks is not None and self.ytick_labels is not None:
             plt.yticks(self.yticks, self.ytick_labels)
-
+        if self.ticklabel_style:
+            plt.ticklabel_format(style=self.ticklabel_style, axis="x", scilimits=(0, 0))
+            
     def save(self):
         if self.fname is None:
             pass
@@ -199,6 +203,7 @@ def plot_sns(
     fig_size=None,
     dpi=None,
     style="white",
+    ticklabel_style=None,
     **kwargs,
 ):
     """
@@ -233,6 +238,7 @@ def plot_sns(
     :param dpi:
     :param kwargs:
     :style: "white", "dark", "whitegrid", "darkgrid"
+    :ticklabel_style: "sci" or "plain"
     :return:
     """
     ploter = PloterSns(
@@ -253,6 +259,7 @@ def plot_sns(
         fig_size=fig_size,
         dpi=dpi,
         style=style,
+        ticklabel_style=ticklabel_style,
         **kwargs,
     )
     ploter.plot()
