@@ -1,4 +1,5 @@
 import os
+from typing import List, Optional, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,69 +10,48 @@ from hplot.config import default_cfg
 from hplot.utils import cm2inch
 
 
-class PloterSns:
+class PloterHeatmap:
     def __init__(
         self,
-        data,
+        x,
+        y,
+        z,
         fname,
         *,
-        xlabel=None,
-        ylabel=None,
-        legend=None,
-        ncol=None,
-        legend_loc="best",
-        legend_frameon=False,
-        xlim=None,
-        ylim=None,
-        xticks=None,
-        yticks=None,
-        xtick_labels=None,
-        ytick_labels=None,
+        cmap: Union[str, Colormap] = "Blues",
+        vmin: Optional[float] = None,
+        vmax: Optional[float] = None,
+        xtick: Union[List[float], np.ndarray, None] = None,
+        ytick: Union[List[float], np.ndarray, None] = None,
         usetex=False,
         display=False,
         fig_size=None,
         dpi=None,
         pad=None,
-        tick_size=None,
-        tick_label_font=None,
-        legend_font_dict=None,
-        label_font_dict=None,
-        style="white",
-        ticklabel_style=None,
-        show_legend=True,
     ):
-        self.data = data
+        self.x = x
+        self.y = y
+        self.z = z
         self.fname = fname
-        self.xlabel = xlabel
-        self.ylabel = ylabel
-        self.legend = legend
-        self.legend_loc = legend_loc
-        self.legend_frameon = legend_frameon
-        self.xlim = xlim
-        self.ylim = ylim
-        self.xticks = xticks
-        self.yticks = yticks
-        self.xtick_labels = xtick_labels
-        self.ytick_labels = ytick_labels
+
+        self.cmap = cmap
+        self.vmin = vmin
+        self.vmax = vmax
+        self.xtick = xtick
+        self.ytick = ytick
         self.usetex = usetex
-        self.ncol = ncol
+
         self.display = display
         self.fig_size = fig_size
         self.dpi = dpi
         self.pad = pad
-        self.tick_size = tick_size
-        self.tick_label_font = tick_label_font
-        self.legend_font_dict = legend_font_dict
-        self.label_font_dict = label_font_dict
-        self.ticklabel_style = ticklabel_style
-        self.show_legend = show_legend
+
         plt.cla()
         plt.clf()
         plt.close()
         self.num_data = None
         self.fig = None
         self.ax = None
-        sns.set_style(style)
         self.__preprocess()
 
     def __preprocess(self):
