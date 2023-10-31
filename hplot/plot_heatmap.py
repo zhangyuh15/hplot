@@ -72,7 +72,6 @@ class PloterHeatmap:
 
     def __preprocess(self):
         rcParams.update({"mathtext.fontset": "stix"})
-        assert isinstance(self.data, (dict, list, tuple))
 
         if self.fig_size is None:
             self.fig_size = default_cfg.fig_size
@@ -108,8 +107,8 @@ class PloterHeatmap:
             vmax=self.vmax,
             center=self.center,
         )
-        if self.center:
-            plt.contour(self.x, colors=self.level_colors, levels=self.levels)
+        if self.levels:
+            plt.contour(self.z, colors=self.level_colors, levels=self.levels)
 
         if self.xtick_labels:
             pos_list_x = self._tick2pos(self.xtick_labels, self.x)
