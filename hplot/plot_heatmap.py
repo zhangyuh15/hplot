@@ -49,7 +49,7 @@ class PloterHeatmap:
         self.level_colors = level_colors
         self.xlabel = xlabel
         self.ylabel = ylabel
- 
+
         self.xtick_labels = xtick_labels
         self.ytick_labels = ytick_labels
         self.usetex = usetex
@@ -123,7 +123,7 @@ class PloterHeatmap:
         if self.ytick_labels is not None:
             pos_list_y = self._tick2pos(self.ytick_labels, self.y)
             plt.yticks(pos_list_y, self.ytick_labels)
-        
+
         if self.xlabel:
             plt.xlabel(self.xlabel, self.label_font_dict)
         if self.ylabel:
@@ -134,7 +134,7 @@ class PloterHeatmap:
         [label.set_fontname(default_cfg.tick_label_font) for label in labels]
         plt.ylabel(self.ylabel, self.label_font_dict)
         self.ax.invert_yaxis()
-        
+
     def _tick2pos(
         self,
         tick: Union[np.ndarray, List[float]],
@@ -152,7 +152,6 @@ class PloterHeatmap:
             pos.append(int(label))
         return pos
 
-            
     def save(self):
         if self.fname is None:
             pass
@@ -193,7 +192,6 @@ def plot_heatmap(
     dpi=None,
     **kwargs,
 ):
-
     ploter = PloterHeatmap(
         x,
         y,
@@ -212,7 +210,6 @@ def plot_heatmap(
         display=display,
         fig_size=fig_size,
         dpi=dpi,
-
         **kwargs,
     )
     ploter.plot()

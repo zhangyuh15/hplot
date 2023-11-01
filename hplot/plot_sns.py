@@ -169,7 +169,7 @@ class PloterSns:
             plt.yticks(self.yticks, self.ytick_labels)
         if self.ticklabel_style:
             plt.ticklabel_format(style=self.ticklabel_style, axis="x", scilimits=(0, 0))
-            
+
     def save(self):
         if self.fname is None:
             pass
