@@ -100,6 +100,8 @@ class PloterHeatmap:
         # plot figure
         if isinstance(self.cmap, str):
             cmap = plt.get_cmap(self.cmap)
+        else:
+            cmap = self.cmap
         self.ax = sns.heatmap(
             self.z,
             cmap=cmap,
@@ -107,13 +109,18 @@ class PloterHeatmap:
             vmax=self.vmax,
             center=self.center,
         )
+
+        cbar = self.ax.collections[0].colorbar
+        cbar.ax.tick_params(labelsize=default_cfg.tick_size)
+        labels = cbar.ax.get_yticklabels()
+        [label.set_fontname(default_cfg.tick_label_font) for label in labels]
         if self.levels:
             plt.contour(self.z, colors=self.level_colors, levels=self.levels)
 
-        if self.xtick_labels:
+        if self.xtick_labels is not None:
             pos_list_x = self._tick2pos(self.xtick_labels, self.x)
-            plt.xticks(pos_list_x, self.xtick_labels)
-        if self.ytick_labels:
+            plt.xticks(pos_list_x, self.xtick_labels, rotation=0)
+        if self.ytick_labels is not None:
             pos_list_y = self._tick2pos(self.ytick_labels, self.y)
             plt.yticks(pos_list_y, self.ytick_labels)
         
@@ -126,7 +133,8 @@ class PloterHeatmap:
         labels = self.ax.get_xticklabels() + self.ax.get_yticklabels()
         [label.set_fontname(default_cfg.tick_label_font) for label in labels]
         plt.ylabel(self.ylabel, self.label_font_dict)
-
+        self.ax.invert_yaxis()
+        
     def _tick2pos(
         self,
         tick: Union[np.ndarray, List[float]],
