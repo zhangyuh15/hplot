@@ -37,7 +37,9 @@ class PloterSns:
         legend_font_dict=None,
         label_font_dict=None,
         style="white",
+        log_yaxis=None,
         ticklabel_style=None,
+        ticklabel_style_axis="x",
         show_legend=True,
     ):
         self.data = data
@@ -65,6 +67,9 @@ class PloterSns:
         self.label_font_dict = label_font_dict
         self.ticklabel_style = ticklabel_style
         self.show_legend = show_legend
+        self.log_yaxis = log_yaxis
+        self.ticklabel_style_axis = ticklabel_style_axis
+        
         plt.cla()
         plt.clf()
         plt.close()
@@ -167,8 +172,12 @@ class PloterSns:
             plt.xticks(self.xticks, self.xtick_labels)
         if self.yticks is not None and self.ytick_labels is not None:
             plt.yticks(self.yticks, self.ytick_labels)
+        # print(self.ticklabel_style_axis)
         if self.ticklabel_style:
-            plt.ticklabel_format(style=self.ticklabel_style, axis="x", scilimits=(0, 0))
+            plt.ticklabel_format(style=self.ticklabel_style, axis=self.ticklabel_style_axis, scilimits=(0, 0))
+            
+        if self.log_yaxis is not None:
+            plt.yscale("log")
 
     def save(self):
         if self.fname is None:
@@ -208,7 +217,9 @@ def plot_sns(
     fig_size=None,
     dpi=None,
     style="white",
+    log_yaxis=None,
     ticklabel_style=None,
+    ticklabel_style_axis="x",
     show_legend=True,
     **kwargs,
 ):
@@ -245,8 +256,10 @@ def plot_sns(
     :param kwargs:
     :style: "white", "dark", "whitegrid", "darkgrid"
     :ticklabel_style: "sci" or "plain"
+    :ticklabel_style_axis: "x" or "y" or "both"
     :return:
     """
+    
     ploter = PloterSns(
         data,
         fname,
@@ -265,7 +278,9 @@ def plot_sns(
         fig_size=fig_size,
         dpi=dpi,
         style=style,
+        log_yaxis=log_yaxis,
         ticklabel_style=ticklabel_style,
+        ticklabel_style_axis=ticklabel_style_axis,
         show_legend=show_legend,
         **kwargs,
     )
