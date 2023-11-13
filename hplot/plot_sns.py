@@ -41,6 +41,8 @@ class PloterSns:
         ticklabel_style=None,
         ticklabel_style_axis="x",
         show_legend=True,
+        line_widths=None,
+        lss=None,
     ):
         self.data = data
         self.fname = fname
@@ -69,7 +71,9 @@ class PloterSns:
         self.show_legend = show_legend
         self.log_yaxis = log_yaxis
         self.ticklabel_style_axis = ticklabel_style_axis
-        
+        self.line_widths = line_widths
+        self.lss = lss
+
         plt.cla()
         plt.clf()
         plt.close()
@@ -134,9 +138,16 @@ class PloterSns:
     def plot(self):
         self.fig, self.ax = plt.subplots(figsize=cm2inch(*self.fig_size), dpi=self.dpi)
         # plot figure
+        if self.line_widths is not None:
+            assert len(self.data) == len(self.line_widths)
+        if self.lss is not None:
+            assert len(self.data) == len(self.lss)
         for i, d in enumerate(self.data):
             x, y, label = self._ppc_data(d)
-            sns.lineplot(x=x, y=y, label=label)
+            lw = self.line_widths[i] if self.line_widths is not None else 2
+            ls = self.lss[i] if self.lss is not None else "-"
+
+            sns.lineplot(x=x, y=y, label=label, linewidth=lw, ls=ls)
 
         # tick
         plt.tick_params(labelsize=self.tick_size)
