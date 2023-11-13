@@ -1,7 +1,7 @@
 class Config:
     def __init__(self):
         self.fig_size = (8.5, 6.5)
-        self.dpi = 300
+        self.dpi = 600
         self.pad = 0.2
 
         self.tick_size = 8
