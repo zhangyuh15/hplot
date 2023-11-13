@@ -1,26 +1,27 @@
-import os
 from itertools import cycle
+from typing import Dict, List, Optional
 
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 
+from hplot.base import Base
 from hplot.config import hConfig
 from hplot.utils import cm2inch
-from hplot.base import Base
 
 
 class plot_plt(Base):
-    def __init__(self, 
-                 data, 
-                 fname=None, 
-                    *,
-                    xlabel=None,
-                    ylabel=None,
-                    legend=None,
-                    display=False,
-                 **kwargs
-                 ):
+    def __init__(
+        self,
+        data: List[Dict],
+        fname: Optional[str] = None,
+        *,
+        xlabel: Optional[str] = None,
+        ylabel: Optional[str] = None,
+        legend: Optional[List[str]] = None,
+        display: Optional[bool] = False,
+        **kwargs
+    ):
         """
         :param data: list[dict]:
             data used to plot figures,
@@ -33,18 +34,18 @@ class plot_plt(Base):
         :param legend: list[str]
         :param display: bool
         :param kwargs["color_list"]:
-        :param kwargs["legend_loc"]: str 
+        :param kwargs["legend_loc"]: str
             "best", "upper right", "upper left", "lower left", "lower right", "right", "center left",
             "center right", "lower center", "upper center", "center"
         :param kwargs["legend_ncol"]: int
             number of columns in legend
-        :param kwargs["xlim"]: 
+        :param kwargs["xlim"]:
         :param kwargs["ylim"]:
         :param kwargs["xticks"]:
         :param kwargs["yticks"]:
         :param kwargs["xtick_labels"]:
         :param kwargs["ytick_labels"]:
-        
+
         """
         super().__init__(**kwargs)
         self.data = data
@@ -75,6 +76,7 @@ class plot_plt(Base):
         # use tex to render fonts, tex install required
         if hConfig.usetex:
             from matplotlib import rc
+
             rc("font", **{"family": "serif", "serif": ["Times New Roman"]})
             rc("text", usetex=True)
 
@@ -100,11 +102,11 @@ class plot_plt(Base):
 
         if self.legend is not None:
             plt.legend(
-                self.legend, 
-                loc=self._kwargs.get("legend_loc", "best"), 
-                ncol=self._kwargs.get("legend_ncol", 1), 
+                self.legend,
+                loc=self._kwargs.get("legend_loc", "best"),
+                ncol=self._kwargs.get("legend_ncol", 1),
                 prop=hConfig.legend_font,
-                )
+            )
 
         #  label
         if self.xlabel is not None:

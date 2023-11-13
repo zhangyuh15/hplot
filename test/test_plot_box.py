@@ -1,5 +1,6 @@
-import pytest
 import numpy as np
+import pytest
+
 from hplot import plot_box
 
 
@@ -9,3 +10,6 @@ def test_plot_box():
     data = [{"label": "a", "y": d1}, {"label": "b", "y": d2}]
 
     plot_box(data, fname="figure/plot_box_example.png", display=False, width=0.2, linewidth=0.1)
+
+if __name__ == "__main__":
+    test_plot_box()

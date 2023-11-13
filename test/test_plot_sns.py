@@ -1,5 +1,6 @@
-import pytest
 import numpy as np
+import pytest
+
 from hplot import plot_sns
 
 
@@ -31,3 +32,6 @@ def test_plot_sns():
         ytick_labels=["ystart", "yend"],
         display=False,
     )
+
+if __name__ == "__main__":
+    test_plot_sns()

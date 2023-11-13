@@ -1,6 +1,8 @@
-import numpy as np
-from hplot import plot_plt, plot_sns, plot_box
 import os
+
+import numpy as np
+
+from hplot import plot_box, plot_plt, plot_sns
 
 os.makedirs("figure", exist_ok=True)
 

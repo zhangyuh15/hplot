@@ -1,10 +1,11 @@
 import os
+from typing import List, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 from matplotlib import rcParams
-from typing import Union, List
+
 from hplot.config import default_cfg
 from hplot.utils import cm2inch
 

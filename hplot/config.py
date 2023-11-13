@@ -1,5 +1,3 @@
-
-
 class Config:
     def __init__(self):
         self.fig_size = (8.5, 6.5)
@@ -15,7 +13,6 @@ class Config:
         self.label_font = {"family": self.base_font, "size": "9", "weight": self.base_font_weight}
 
         self.usetex = False
-
 
     def keys(self):
         return [

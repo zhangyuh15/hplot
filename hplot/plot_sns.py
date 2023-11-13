@@ -1,87 +1,83 @@
 import os
-
+from typing import Dict, List, Optional
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 from matplotlib import rcParams
 
-from hplot.config import default_cfg
+from hplot.config import hConfig
 from hplot.utils import cm2inch
+from hplot.base import Base
 
-
-class PloterSns:
-    def __init__(
-        self,
-        data,
-        fname,
+class plot_sns(Base):
+    def __init__(self,         
+        data: List[Dict],
+        fname: Optional[str] = None,
         *,
-        xlabel=None,
-        ylabel=None,
-        legend=None,
-        ncol=None,
-        legend_loc="best",
-        legend_frameon=False,
-        xlim=None,
-        ylim=None,
-        xticks=None,
-        yticks=None,
-        xtick_labels=None,
-        ytick_labels=None,
-        usetex=False,
-        display=False,
-        fig_size=None,
-        dpi=None,
-        pad=None,
-        tick_size=None,
-        tick_label_font=None,
-        legend_font_dict=None,
-        label_font_dict=None,
-        style="white",
-        log_yaxis=None,
-        ticklabel_style=None,
-        ticklabel_style_axis="x",
-        show_legend=True,
-        line_widths=None,
-        lss=None,
-    ):
+        xlabel: Optional[str] = None,
+        ylabel: Optional[str] = None,
+        legend: Optional[List[str]] = None,
+        display: Optional[bool] = False,
+        **kwargs):
+        """
+        :param data: list[dict]:
+            data used to plot figures,
+            example: [dict(x=x1_list, y=y1_list, label=label1), dict(x=x2_list, y=y2_list, label=label2)]
+            when there is no repeat experiment data, xi_list=x, shape of x is [d,],
+                                                    yi_list=y, shape of y is [d,],
+                                                    lableli str,
+            when there is repeat experiment data, xi_list=[x1, x2, ..., xd], shape of xi is [d,],
+                                                yi_list=[y1, y2, ..., yd], shape of y is [d,],
+                                                lableli str,
+        :param fname: fname: str,
+            the figure will be saved here,
+            example: "./path_to_file/figure.png"
+        :param xlabel:  str
+        :param ylabel:  str
+        :param legend: list[str]
+        :param display: bool
+        :param kwargs["style"]: str
+            "white", "dark", "whitegrid", "darkgrid"
+        :param kwargs["linewidths"]: List[str]
+        :param kwargs["linestyles"]: List[str]
+        :param kwargs["legend_loc"]: str
+            "best", "upper right", "upper left", "lower left", "lower right", "right", "center left",
+            "center right", "lower center", "upper center", "center"
+        :param kwargs["legend_frameon"]: bool
+        :param kwargs["legend_ncol"]: int
+            number of columns in legend
+        :param kwargs["show_legend"]: bool
+        :param kwargs["xlim"]:
+        :param kwargs["ylim"]:
+        :param kwargs["xticks"]:
+        :param kwargs["yticks"]:
+        :param kwargs["xtick_labels"]:
+        :param kwargs["ytick_labels"]:
+        :param kwargs["log_yaxis"]: bool
+        :param kwargs["ticklabel_style"]: "sci" or "plain"
+        :param kwargs["ticklabel_style_axis"]: "x" or "y" or "both"
+        :param kwargs["log_yaxis"]: bool
+
+        """
+        super().__init__(**kwargs)
         self.data = data
         self.fname = fname
         self.xlabel = xlabel
         self.ylabel = ylabel
         self.legend = legend
-        self.legend_loc = legend_loc
-        self.legend_frameon = legend_frameon
-        self.xlim = xlim
-        self.ylim = ylim
-        self.xticks = xticks
-        self.yticks = yticks
-        self.xtick_labels = xtick_labels
-        self.ytick_labels = ytick_labels
-        self.usetex = usetex
-        self.ncol = ncol
         self.display = display
-        self.fig_size = fig_size
-        self.dpi = dpi
-        self.pad = pad
-        self.tick_size = tick_size
-        self.tick_label_font = tick_label_font
-        self.legend_font_dict = legend_font_dict
-        self.label_font_dict = label_font_dict
-        self.ticklabel_style = ticklabel_style
-        self.show_legend = show_legend
-        self.log_yaxis = log_yaxis
-        self.ticklabel_style_axis = ticklabel_style_axis
-        self.line_widths = line_widths
-        self.lss = lss
 
-        plt.cla()
-        plt.clf()
-        plt.close()
         self.num_data = None
         self.fig = None
         self.ax = None
+        plt.cla()
+        plt.clf()
+        plt.close()
+        style = kwargs.get("style", "white")
         sns.set_style(style)
         self.__preprocess()
+
+        self.run()
 
     def __preprocess(self):
         rcParams.update({"mathtext.fontset": "stix"})
@@ -91,23 +87,8 @@ class PloterSns:
             self.data = [self.data]
         self.num_data = len(self.data)
 
-        if self.fig_size is None:
-            self.fig_size = default_cfg.fig_size
-        if self.dpi is None:
-            self.dpi = default_cfg.dpi
-        if self.pad is None:
-            self.pad = default_cfg.pad
-        if self.tick_size is None:
-            self.tick_size = default_cfg.tick_size
-        if self.tick_label_font is None:
-            self.tick_label_font = default_cfg.tick_label_font
-        if self.legend_font_dict is None:
-            self.legend_font_dict = default_cfg.legend_font
-        if self.label_font_dict is None:
-            self.label_font_dict = default_cfg.label_font
-
         # use tex to render fonts, tex install required
-        if self.usetex:
+        if hConfig.usetex:
             from matplotlib import rc
 
             rc("font", **{"family": "serif", "serif": ["Times New Roman"]})
@@ -134,25 +115,28 @@ class PloterSns:
         x = x.reshape(-1)
         y = y.reshape(-1)
         return x, y, label
-
+    
     def plot(self):
-        self.fig, self.ax = plt.subplots(figsize=cm2inch(*self.fig_size), dpi=self.dpi)
+        self.fig, self.ax = plt.subplots(figsize=cm2inch(*hConfig.fig_size), dpi=hConfig.dpi)
         # plot figure
-        if self.line_widths is not None:
-            assert len(self.data) == len(self.line_widths)
-        if self.lss is not None:
-            assert len(self.data) == len(self.lss)
+        lws = self._kwargs.get("linewidths", None)
+        if lws is not None:
+            assert len(self.data) == len(lws)
+        
+        lss = self._kwargs.get("linestyles", None)
+        if lss is not None:
+            assert len(self.data) == len(lss)
+
         for i, d in enumerate(self.data):
             x, y, label = self._ppc_data(d)
-            lw = self.line_widths[i] if self.line_widths is not None else 2
-            ls = self.lss[i] if self.lss is not None else "-"
-
+            lw = lws[i] if lws is not None else 2
+            ls = lss[i] if lss is not None else "-"
             sns.lineplot(x=x, y=y, label=label, linewidth=lw, ls=ls)
 
         # tick
-        plt.tick_params(labelsize=self.tick_size)
+        plt.tick_params(labelsize=hConfig.tick_size)
         labels = self.ax.get_xticklabels() + self.ax.get_yticklabels()
-        [label.set_fontname(self.tick_label_font) for label in labels]
+        [label.set_fontname(hConfig.tick_label_font) for label in labels]
 
         # set legend
         legend_handles, legend_labels = self.ax.get_legend_handles_labels()
@@ -160,145 +144,48 @@ class PloterSns:
         legend_dict["handles"] = legend_handles
         legend_dict["labels"] = self.legend if self.legend is not None else legend_labels
         legend_dict["columnspacing"] = 0.3
-        legend_dict["loc"] = "best" if self.legend_loc is None else self.legend_loc
-        legend_dict["frameon"] = self.legend_frameon
-        legend_dict["prop"] = default_cfg.legend_font
-        if self.ncol is not None:
-            legend_dict["ncol"] = self.ncol
+        legend_loc = self._kwargs.get("legend_loc", "best")
+        legend_dict["loc"] = "best" if legend_loc is None else legend_loc
+        legend_dict["frameon"] = self._kwargs.get("legend_frameon", True)
+        legend_dict["prop"] = hConfig.legend_font
 
-        if self.show_legend:
+        ncol = self._kwargs.get("legend_ncol", 1)
+        if ncol is not None:
+            legend_dict["ncol"] = ncol
+
+        if self._kwargs.get("show_legend", True):
             self.ax.legend(**legend_dict)
         else:
             plt.legend([], [], frameon=False)
 
         #  label
-        plt.xlabel(self.xlabel, self.label_font_dict)
-        plt.ylabel(self.ylabel, self.label_font_dict)
+        if self.xlabel is not None:
+            plt.xlabel(self.xlabel, hConfig.label_font)
+        if self.xlabel is not None:
+            plt.ylabel(self.ylabel, hConfig.label_font)
 
-        if self.xlim is not None:
-            plt.xlim(self.xlim)
-        if self.ylim is not None:
-            plt.ylim(self.ylim)
-        if self.xticks is not None and self.xtick_labels is not None:
-            plt.xticks(self.xticks, self.xtick_labels)
-        if self.yticks is not None and self.ytick_labels is not None:
-            plt.yticks(self.yticks, self.ytick_labels)
-        # print(self.ticklabel_style_axis)
-        if self.ticklabel_style:
-            plt.ticklabel_format(style=self.ticklabel_style, axis=self.ticklabel_style_axis, scilimits=(0, 0))
-            
-        if self.log_yaxis is not None:
+        xlim = self._kwargs.get("xlim", None)
+        if xlim is not None:
+            plt.xlim(xlim)
+        ylim = self._kwargs.get("ylim", None)
+        if ylim is not None:
+            plt.ylim(ylim)
+
+        xticks = self._kwargs.get("xticks", None)
+        yticks = self._kwargs.get("yticks", None)
+        xtick_labels = self._kwargs.get("xtick_labels", None)
+        ytick_labels = self._kwargs.get("ytick_labels", None)
+
+        if xticks is not None and xtick_labels is not None:
+            plt.xticks(xticks, xtick_labels)
+        if yticks is not None and ytick_labels is not None:
+            plt.yticks(yticks, ytick_labels)
+
+        ticklabel_style = self._kwargs.get("ticklabel_style", None)
+        ticklabel_style_axis = self._kwargs.get("ticklabel_style_axis", "x")
+        if ticklabel_style:
+            plt.ticklabel_format(style=ticklabel_style, axis=ticklabel_style_axis, scilimits=(0, 0))
+
+        log_yaxis = self._kwargs.get("log_yaxis", None)
+        if log_yaxis is not None:
             plt.yscale("log")
-
-    def save(self):
-        if self.fname is None:
-            pass
-        else:
-            dir_path = os.path.dirname(self.fname)
-            os.makedirs(dir_path, exist_ok=True)
-            self.fig.set_tight_layout(True)
-            plt.tight_layout(pad=self.pad)
-            plt.savefig(self.fname)
-
-    def show(self):
-        self.fig.set_tight_layout(True)
-        plt.tight_layout(pad=self.pad)
-        plt.show()
-
-    def close(self):
-        plt.close()
-
-
-def plot_sns(
-    data,
-    fname,
-    *,
-    xlabel=None,
-    ylabel=None,
-    legend=None,
-    legend_loc="best",
-    legend_frameon=False,
-    xlim=None,
-    ylim=None,
-    xticks=None,
-    yticks=None,
-    xtick_labels=None,
-    ytick_labels=None,
-    display=False,
-    fig_size=None,
-    dpi=None,
-    style="white",
-    log_yaxis=None,
-    ticklabel_style=None,
-    ticklabel_style_axis="x",
-    show_legend=True,
-    **kwargs,
-):
-    """
-    plot a curve using seaborn
-    :param data: data: list[dict]:
-        data used to plot figures,
-        example: [dict(x=x1_list, y=y1_list, label=label1), dict(x=x2_list, y=y2_list, label=label2)]
-        when there is no repeat experiment data, xi_list=x, shape of x is [d,],
-                                                 yi_list=y, shape of y is [d,],
-                                                 lableli str,
-        when there is repeat experiment data, xi_list=[x1, x2, ..., xd], shape of xi is [d,],
-                                              yi_list=[y1, y2, ..., yd], shape of y is [d,],
-                                              lableli str,
-
-    :param fname: fname: str,
-        the figure will be saved here,
-        example: "./path_to_file/figure.png"
-    :param xlabel:  str
-    :param ylabel:  str
-    :param legend:
-    :param legend_loc: "best", "upper right", "upper left", "lower left", "lower right", "right", "center left",
-        "center right", "lower center", "upper center", "center"
-    :param legend_frameon: whether legend has background frame
-    :param xlim:
-    :param ylim:
-    :param xticks:
-    :param yticks:
-    :param xtick_labels:
-    :param ytick_labels:
-    :param display:
-    :param fig_size:
-    :param dpi:
-    :param kwargs:
-    :style: "white", "dark", "whitegrid", "darkgrid"
-    :ticklabel_style: "sci" or "plain"
-    :ticklabel_style_axis: "x" or "y" or "both"
-    :return:
-    """
-    
-    ploter = PloterSns(
-        data,
-        fname,
-        xlabel=xlabel,
-        ylabel=ylabel,
-        legend=legend,
-        legend_loc=legend_loc,
-        legend_frameon=legend_frameon,
-        xlim=xlim,
-        ylim=ylim,
-        xticks=xticks,
-        yticks=yticks,
-        xtick_labels=xtick_labels,
-        ytick_labels=ytick_labels,
-        display=display,
-        fig_size=fig_size,
-        dpi=dpi,
-        style=style,
-        log_yaxis=log_yaxis,
-        ticklabel_style=ticklabel_style,
-        ticklabel_style_axis=ticklabel_style_axis,
-        show_legend=show_legend,
-        **kwargs,
-    )
-    ploter.plot()
-    if fname is not None:
-        ploter.save()
-    if display:
-        ploter.show()
-
-    ploter.close()

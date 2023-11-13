@@ -2,7 +2,6 @@ import os
 
 from setuptools import setup
 
-
 setup(
     name="hplot",
     version="0.0.5",
