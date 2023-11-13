@@ -5,62 +5,54 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 
-from hplot.config import default_cfg
+from hplot.config import hConfig
 from hplot.utils import cm2inch
+from hplot.base import Base
 
 
-class PloterPlt:
-    def __init__(
-        self,
-        data,
-        fname=None,
-        *,
-        xlabel=None,
-        ylabel=None,
-        legend=None,
-        legend_loc="best",
-        color_list=None,
-        xlim=None,
-        ylim=None,
-        xticks=None,
-        yticks=None,
-        xtick_labels=None,
-        ytick_labels=None,
-        usetex=False,
-        ncol=1,
-        display=True,
-        fig_size=None,
-        dpi=None,
-        pad=None,
-        tick_size=None,
-        tick_label_font=None,
-        legend_font_dict=None,
-        label_font_dict=None,
-        **kwargs,
-    ):
+class plot_plt(Base):
+    def __init__(self, 
+                 data, 
+                 fname=None, 
+                    *,
+                    xlabel=None,
+                    ylabel=None,
+                    legend=None,
+                    display=False,
+                 **kwargs
+                 ):
+        """
+        :param data: list[dict]:
+            data used to plot figures,
+            example: [dict(x=x1, y=y1), dict(x=x2, y=y2)]
+        :param fname:str,
+            the figure will be saved here,
+            example: "./path_to_file/figure.png"
+        :param xlabel: str
+        :param ylabel: str
+        :param legend: list[str]
+        :param display: bool
+        :param kwargs["color_list"]:
+        :param kwargs["legend_loc"]: str 
+            "best", "upper right", "upper left", "lower left", "lower right", "right", "center left",
+            "center right", "lower center", "upper center", "center"
+        :param kwargs["legend_ncol"]: int
+            number of columns in legend
+        :param kwargs["xlim"]: 
+        :param kwargs["ylim"]:
+        :param kwargs["xticks"]:
+        :param kwargs["yticks"]:
+        :param kwargs["xtick_labels"]:
+        :param kwargs["ytick_labels"]:
+        
+        """
+        super().__init__(**kwargs)
         self.data = data
         self.fname = fname
         self.xlabel = xlabel
         self.ylabel = ylabel
         self.legend = legend
-        self.legend_loc = legend_loc
-        self.color_list = color_list
-        self.xlim = xlim
-        self.ylim = ylim
-        self.xticks = xticks
-        self.yticks = yticks
-        self.xtick_labels = xtick_labels
-        self.ytick_labels = ytick_labels
-        self.usetex = usetex
-        self.ncol = ncol
         self.display = display
-        self.fig_size = fig_size
-        self.dpi = dpi
-        self.pad = pad
-        self.tick_size = tick_size
-        self.tick_label_font = tick_label_font
-        self.legend_font_dict = legend_font_dict
-        self.label_font_dict = label_font_dict
 
         self.num_data = None
         self.fig = None
@@ -70,6 +62,8 @@ class PloterPlt:
         plt.close()
         self.__preprocess()
 
+        self.run()
+
     def __preprocess(self):
         rcParams.update({"mathtext.fontset": "stix"})
         assert isinstance(self.data, (dict, list, tuple))
@@ -78,145 +72,59 @@ class PloterPlt:
             self.data = [self.data]
         self.num_data = len(self.data)
 
-        if self.fig_size is None:
-            self.fig_size = default_cfg.fig_size
-        if self.dpi is None:
-            self.dpi = default_cfg.dpi
-        if self.pad is None:
-            self.pad = default_cfg.pad
-        if self.tick_size is None:
-            self.tick_size = default_cfg.tick_size
-        if self.tick_label_font is None:
-            self.tick_label_font = default_cfg.tick_label_font
-        if self.legend_font_dict is None:
-            self.legend_font_dict = default_cfg.legend_font
-        if self.label_font_dict is None:
-            self.label_font_dict = default_cfg.label_font
-
         # use tex to render fonts, tex install required
-        if self.usetex:
+        if hConfig.usetex:
             from matplotlib import rc
-
             rc("font", **{"family": "serif", "serif": ["Times New Roman"]})
             rc("text", usetex=True)
 
         # color list
-        if (self.color_list is None) or len(self.color_list) < self.num_data:
+        cl = self._kwargs.get("color_list", None)
+        if (cl is None) or len(cl) < self.num_data:
             tableau_colors = cycle(mcolors.TABLEAU_COLORS)
-            self.color_list = [next(tableau_colors) for _ in range(self.num_data)]
+            self._kwargs["color_list"] = [next(tableau_colors) for _ in range(self.num_data)]
 
     def plot(self):
-        self.fig, self.ax = plt.subplots(figsize=cm2inch(*self.fig_size), dpi=self.dpi)
+        self.fig, self.ax = plt.subplots(figsize=cm2inch(*hConfig.fig_size), dpi=hConfig.dpi)
 
         # plot figure
+        cl = self._kwargs.get("color_list", None)
+        assert cl is not None
         for i, d in enumerate(self.data):
-            plt.plot(d["x"], d["y"], color=self.color_list[i])
+            plt.plot(d["x"], d["y"], color=cl[i])
 
         # legend
-        plt.tick_params(labelsize=self.tick_size)
+        plt.tick_params(labelsize=hConfig.tick_size)
         labels = self.ax.get_xticklabels() + self.ax.get_yticklabels()
-        [label.set_fontname(self.tick_label_font) for label in labels]
+        [label.set_fontname(hConfig.tick_label_font) for label in labels]
 
         if self.legend is not None:
-            plt.legend(self.legend, loc=self.legend_loc, ncol=self.ncol, prop=self.legend_font_dict)
+            plt.legend(
+                self.legend, 
+                loc=self._kwargs.get("legend_loc", "best"), 
+                ncol=self._kwargs.get("legend_ncol", 1), 
+                prop=hConfig.legend_font,
+                )
 
         #  label
-        plt.xlabel(self.xlabel, self.label_font_dict)
-        plt.ylabel(self.ylabel, self.label_font_dict)
+        if self.xlabel is not None:
+            plt.xlabel(self.xlabel, hConfig.label_font)
+        if self.ylabel is not None:
+            plt.ylabel(self.ylabel, hConfig.label_font)
 
-        if self.xlim is not None:
-            plt.xlim(self.xlim)
-        if self.ylim is not None:
-            plt.ylim(self.ylim)
-        if self.xticks is not None and self.xtick_labels is not None:
-            plt.xticks(self.xticks, self.xtick_labels)
-        if self.yticks is not None and self.ytick_labels is not None:
-            plt.yticks(self.yticks, self.ytick_labels)
+        xlim = self._kwargs.get("xlim", None)
+        if xlim is not None:
+            plt.xlim(xlim)
+        ylim = self._kwargs.get("ylim", None)
+        if ylim is not None:
+            plt.ylim(ylim)
 
-    def save(self):
-        plt.tight_layout(pad=self.pad)
-        if self.fname is None:
-            pass
-        else:
-            dir_path = os.path.dirname(self.fname)
-            os.makedirs(dir_path, exist_ok=True)
-            plt.savefig(self.fname)
+        xticks = self._kwargs.get("xticks", None)
+        yticks = self._kwargs.get("yticks", None)
+        xtick_labels = self._kwargs.get("xtick_labels", None)
+        ytick_labels = self._kwargs.get("ytick_labels", None)
 
-    def show(self):
-        self.fig.set_tight_layout(True)
-        plt.tight_layout(pad=self.pad)
-        plt.show()
-
-    def close(self):
-        plt.close()
-
-
-def plot_plt(
-    data,
-    fname=None,
-    *,
-    xlabel=None,
-    ylabel=None,
-    legend=None,
-    legend_loc="best",
-    xlim=None,
-    ylim=None,
-    xticks=None,
-    yticks=None,
-    xtick_labels=None,
-    ytick_labels=None,
-    display=True,
-    fig_size=None,
-    dpi=None,
-    **kwargs,
-):
-    """
-    plot a curve using matplotlib.pyplot
-    :param data: list[dict]:
-        data used to plot figures,
-        example: [dict(x=x1, y=y1), dict(x=x2, y=y2)]
-    :param fname: str,
-        the figure will be saved here,
-        example: "./path_to_file/figure.png"
-    :param xlabel: str
-    :param ylabel: str
-    :param legend: list[str]
-    :param legend_loc: "best", "upper right", "upper left", "lower left", "lower right", "right", "center left",
-        "center right", "lower center", "upper center", "center"
-    :param xlim:
-    :param ylim:
-    :param xticks:
-    :param yticks:
-    :param xtick_labels:
-    :param ytick_labels:
-    :param display:
-    :param fig_size:
-    :param dpi:
-    :param kwargs:
-    :return:
-    """
-    ploter = PloterPlt(
-        data,
-        fname,
-        xlabel=xlabel,
-        ylabel=ylabel,
-        legend=legend,
-        legend_loc=legend_loc,
-        xlim=xlim,
-        ylim=ylim,
-        xticks=xticks,
-        yticks=yticks,
-        xtick_labels=xtick_labels,
-        ytick_labels=ytick_labels,
-        display=display,
-        fig_size=fig_size,
-        dpi=dpi,
-        **kwargs,
-    )
-    ploter.plot()
-    if fname is not None:
-        ploter.save()
-    if display:
-        ploter.show()
-
-    ploter.close()
+        if xticks is not None and xtick_labels is not None:
+            plt.xticks(xticks, xtick_labels)
+        if yticks is not None and ytick_labels is not None:
+            plt.yticks(yticks, ytick_labels)

@@ -1,19 +1,35 @@
-class AttrDict(dict):
-    """
-    A extended dict of which the keys can be used as attribution
-    """
-
-    __setattr__ = dict.__setitem__
-    __getattr__ = dict.__getitem__
 
 
-default_cfg = AttrDict()
+class Config:
+    def __init__(self):
+        self.fig_size = (8.5, 6.5)
+        self.dpi = 300
+        self.pad = 0.2
 
-default_cfg.fig_size = (8.5, 6.5)
-default_cfg.dpi = 300
-default_cfg.pad = 0.2
+        self.tick_size = 8
 
-default_cfg.tick_size = 8
-default_cfg.tick_label_font = "Times New Roman"
-default_cfg.legend_font = {"family": "Times New Roman", "size": "8", "weight": "normal"}
-default_cfg.label_font = {"family": "Times New Roman", "size": "9", "weight": "normal"}
+        self.base_font = "Times New Roman"
+        self.base_font_weight = "normal"
+        self.tick_label_font = self.base_font
+        self.legend_font = {"family": self.base_font, "size": "8", "weight": self.base_font_weight}
+        self.label_font = {"family": self.base_font, "size": "9", "weight": self.base_font_weight}
+
+        self.usetex = False
+
+
+    def keys(self):
+        return [
+            "fig_size",
+            "dpi",
+            "pad",
+            "tick_size",
+            "base_font",
+            "base_font_weight",
+            "tick_label_font",
+            "legend_font",
+            "label_font",
+            "usetex",
+        ]
+
+
+hConfig = Config()

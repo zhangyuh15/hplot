@@ -14,3 +14,10 @@ def cm2inch(*tupl):
         return tuple(i / inch for i in tupl[0])
     else:
         return tuple(i / inch for i in tupl)
+
+
+def get_default_config(kwargs, config, key):
+    value = kwargs.get(key, None)
+    if value is None:
+        value = getattr(config, key)
+    return value
