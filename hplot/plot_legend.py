@@ -2,6 +2,7 @@ from typing import List, Optional, Tuple, Union
 import matplotlib.pyplot as plt
 from itertools import cycle
 import matplotlib.colors as mcolors
+from hplot.config import hConfig
 
 
 def plot_legend(
@@ -13,7 +14,7 @@ def plot_legend(
     linewidths: Optional[List[float]] = None,
     ncol: Optional[int] = 1,
     figure_width: Optional[float] = 10,
-    figure_height: Optional[float] = 3.2,
+    figure_height: Optional[float] = 0.32,
     display: Optional[bool] = False,
 ):
     plt.cla()
@@ -36,14 +37,24 @@ def plot_legend(
         ls = linestyles[i] if linestyles is not None else "-"
         lc = linecolors[i]
         (line,) = plt.plot(range(10), label="line{}".format(i), lw=lw, ls=ls, color=lc)
-
+        handles.append(line)
     fig, ax = plt.subplots(figsize=(figure_width, figure_height))
-    ax.legend(
-        handles=handles, labels=legends, mode="expand", ncol=ncol, borderaxespad=0
+    lgd = ax.legend(
+        handles=handles,
+        labels=legends,
+        mode="expand",
+        ncol=ncol,
+        borderaxespad=0,
+        prop=hConfig.legend_font,
     )
     ax.axis("off")  # 去掉坐标的刻度
+
+    lgd_fig = lgd.figure
+    lgd_fig.canvas.draw()
+    bbox = lgd.get_window_extent().transformed(lgd_fig.dpi_scale_trans.inverted())
+
     if fname is not None:
-        plt.savefig(fname, bbox_inches="tight", pad_inches=0)
+        lgd_fig.savefig(fname, bbox_inches=bbox, pad_inches=0)
     if display:
         plt.show()
     plt.close()
