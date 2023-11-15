@@ -8,7 +8,7 @@ from matplotlib import rcParams
 from hplot.config import hConfig
 from hplot.utils import cm2inch
 from hplot.base import Base
-
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 class plot_sns(Base):
     def __init__(self,         
         data: List[Dict],
@@ -57,6 +57,7 @@ class plot_sns(Base):
         :param kwargs["ticklabel_style"]: "sci" or "plain"
         :param kwargs["ticklabel_style_axis"]: "x" or "y" or "both"
         :param kwargs["log_yaxis"]: bool
+        :param kwargs["sub_axis"]: List of dict keys: width, height, loc, borderpad, xlim, ylim, links. link [("ul", "ll"), ("ur", "lr")] 
 
         """
         super().__init__(**kwargs)
@@ -127,6 +128,7 @@ class plot_sns(Base):
         if lss is not None:
             assert len(self.data) == len(lss)
 
+        
         for i, d in enumerate(self.data):
             x, y, label = self._ppc_data(d)
             lw = lws[i] if lws is not None else 2
@@ -189,3 +191,59 @@ class plot_sns(Base):
         log_yaxis = self._kwargs.get("log_yaxis", None)
         if log_yaxis is not None:
             plt.yscale("log")
+
+        if self._kwargs.get("sub_axis", None) is not None:
+            from matplotlib.patches import ConnectionPatch
+            for sub_ax_config in self._kwargs.get("sub_axis", None) :
+                width = sub_ax_config.get("width", "40%")
+                height = sub_ax_config.get("height", "30%")
+                loc = sub_ax_config.get("loc", "upper right")
+                borderpad = sub_ax_config.get("borderpad", 1)
+                axins = inset_axes(self.ax, width, height , loc=loc, borderpad=borderpad)
+                # plot original data
+                # plt.gca().set_prop_cycle(None)
+                for i, d in enumerate(self.data):
+                    x, y, label = self._ppc_data(d)
+                    lw = lws[i] if lws is not None else 2
+                    ls = lss[i] if lss is not None else "-"
+                    sns.lineplot(x=x, y=y, label=label, linewidth=lw, ls=ls, ax=axins, legend=False)
+                plt.tick_params(labelsize=hConfig.tick_size)
+                labels = axins.get_xticklabels() + axins.get_yticklabels()
+                [label.set_fontname(hConfig.tick_label_font) for label in labels]
+                # set enlarged zone
+                sub_xlim = sub_ax_config["xlim"]
+                sub_ylim = sub_ax_config["ylim"]
+
+                axins.set_xlim(sub_xlim)
+                axins.set_ylim(sub_ylim)
+
+                tx0 = sub_xlim[0]
+                tx1 = sub_xlim[1]
+                ty0 = sub_ylim[0]
+                ty1 = sub_ylim[1]
+                sx = [tx0,tx1,tx1,tx0,tx0]
+                sy = [ty0,ty0,ty1,ty1,ty0]
+                print(sx, sy)
+                self.ax.plot(sx,sy,"black", lw=1)
+
+                # 画两条线
+
+                link_dict={
+                    "ur": (tx1,ty1),
+                    "ul": (tx0,ty1),
+                    "ll": (tx0,ty0),
+                    "lr": (tx1,ty0),
+                }
+
+                linke = sub_ax_config.get("links", [("ul", "ll"), ("ur", "lr")])
+
+                for start, end in linke:
+                    xy = link_dict[start]
+                    xy2 = link_dict[end]
+                    con = ConnectionPatch(xyA=xy2,xyB=xy,coordsA="data",coordsB="data",
+                            axesA=axins,axesB=self.ax, color="black", lw=1)
+                    axins.add_artist(con)
+
+               
+
+
