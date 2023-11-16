@@ -45,6 +45,8 @@ class plot_plt(Base):
         :param kwargs["yticks"]:
         :param kwargs["xtick_labels"]:
         :param kwargs["ytick_labels"]:
+        :param kwargs["linewidths"]: List[str]
+        :param kwargs["linestyles"]: List[str]
 
         """
         super().__init__(**kwargs)
@@ -84,16 +86,28 @@ class plot_plt(Base):
         cl = self._kwargs.get("color_list", None)
         if (cl is None) or len(cl) < self.num_data:
             tableau_colors = cycle(mcolors.TABLEAU_COLORS)
-            self._kwargs["color_list"] = [next(tableau_colors) for _ in range(self.num_data)]
+            self._kwargs["color_list"] = [
+                next(tableau_colors) for _ in range(self.num_data)
+            ]
 
     def plot(self):
-        self.fig, self.ax = plt.subplots(figsize=cm2inch(*hConfig.fig_size), dpi=hConfig.dpi)
+        self.fig, self.ax = plt.subplots(
+            figsize=cm2inch(*hConfig.fig_size), dpi=hConfig.dpi
+        )
+        lws = self._kwargs.get("linewidths", None)
+        if lws is not None:
+            assert len(self.data) == len(lws)
 
+        lss = self._kwargs.get("linestyles", None)
+        if lss is not None:
+            assert len(self.data) == len(lss)
         # plot figure
         cl = self._kwargs.get("color_list", None)
         assert cl is not None
         for i, d in enumerate(self.data):
-            plt.plot(d["x"], d["y"], color=cl[i])
+            lw = lws[i] if lws is not None else 2
+            ls = lss[i] if lss is not None else "-"
+            plt.plot(d["x"], d["y"], color=cl[i], linewidth=lw, ls=ls)
 
         # legend
         plt.tick_params(labelsize=hConfig.tick_size)
