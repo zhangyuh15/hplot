@@ -168,7 +168,16 @@ class plot_2y(Base):
                 legend=False,
             )
             handles.append(l1)
-        with sns.axes_style("white"):
+        with sns.axes_style(
+            "white",
+            {
+                "axes.edgecolor": "white",
+                "axes.spines.left": False,
+                "axes.spines.bottom": False,
+                "axes.spines.right": False,
+                "axes.spines.top": False,
+            },
+        ):
             i = 1
             d = self.data[i]
             x, y, label = self._ppc_data(d)
@@ -188,7 +197,12 @@ class plot_2y(Base):
             )
 
         # tick
-        plt.tick_params(labelsize=hConfig.tick_size)
+        # plt.tick_params(labelsize=hConfig.tick_size)
+        self.ax.tick_params(axis="x", labelsize=hConfig.tick_size)
+        self.ax.tick_params(axis="y", labelsize=hConfig.tick_size)
+        ax2.tick_params(axis="y", labelsize=hConfig.tick_size)
+        ax2.tick_params(axis="x", labelsize=hConfig.tick_size)
+
         labels = self.ax.get_xticklabels() + self.ax.get_yticklabels()
         [label.set_fontname(hConfig.tick_label_font) for label in labels]
         labels = ax2.get_xticklabels() + ax2.get_yticklabels()
