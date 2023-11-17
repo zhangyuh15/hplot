@@ -20,18 +20,18 @@ class Base(metaclass=ABCMeta):
         pass
 
     def save(self):
-        self.fig.set_tight_layout(True)
-        plt.tight_layout(pad=hConfig.pad)
+        # self.fig.set_tight_layout(True)
+        # plt.tight_layout(pad=hConfig.pad)
         if self.fname is None:
             pass
         else:
             dir_path = os.path.dirname(self.fname)
             os.makedirs(dir_path, exist_ok=True)
-            plt.savefig(self.fname)
+            plt.savefig(self.fname, bbox_inches="tight")
 
     def show(self):
-        self.fig.set_tight_layout(True)
-        plt.tight_layout(pad=hConfig.pad)
+        # self.fig.set_tight_layout(True)
+        # plt.tight_layout(pad=hConfig.pad)
         plt.show()
 
     def close(self):
