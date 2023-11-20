@@ -9,9 +9,21 @@ class Config:
         self.base_font = "Times New Roman"
         self.base_font_weight = "normal"
         self.tick_label_font = self.base_font
-        self.legend_font = {"family": self.base_font, "size": "8", "weight": self.base_font_weight}
-        self.label_font = {"family": self.base_font, "size": "9", "weight": self.base_font_weight}
-
+        self.legend_font = {
+            "family": self.base_font,
+            "size": "8",
+            "weight": self.base_font_weight,
+        }
+        self.label_font = {
+            "family": self.base_font,
+            "size": "9",
+            "weight": self.base_font_weight,
+        }
+        self.title_font = {
+            "family": self.base_font,
+            "size": "9",
+            "weight": self.base_font_weight,
+        }
         self.usetex = False
 
     def keys(self):
@@ -26,6 +38,7 @@ class Config:
             "legend_font",
             "label_font",
             "usetex",
+            "title_font",
         ]
 
 

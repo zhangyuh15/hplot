@@ -9,16 +9,21 @@ from hplot.config import hConfig
 from hplot.utils import cm2inch
 from hplot.base import Base
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+
+
 class plot_sns(Base):
-    def __init__(self,         
+    def __init__(
+        self,
         data: List[Dict],
         fname: Optional[str] = None,
         *,
         xlabel: Optional[str] = None,
         ylabel: Optional[str] = None,
         legend: Optional[List[str]] = None,
+        title: Optional[str] = None,
         display: Optional[bool] = False,
-        **kwargs):
+        **kwargs
+    ):
         """
         :param data: list[dict]:
             data used to plot figures,
@@ -57,7 +62,7 @@ class plot_sns(Base):
         :param kwargs["ticklabel_style"]: "sci" or "plain"
         :param kwargs["ticklabel_style_axis"]: "x" or "y" or "both"
         :param kwargs["log_yaxis"]: bool
-        :param kwargs["sub_axis"]: List of dict keys: width, height, loc, borderpad, xlim, ylim, links. link [("ul", "ll"), ("ur", "lr")] 
+        :param kwargs["sub_axis"]: List of dict keys: width, height, loc, borderpad, xlim, ylim, links. link [("ul", "ll"), ("ur", "lr")]
 
         """
         super().__init__(**kwargs)
@@ -67,6 +72,7 @@ class plot_sns(Base):
         self.ylabel = ylabel
         self.legend = legend
         self.display = display
+        self.title = title
 
         self.num_data = None
         self.fig = None
@@ -116,25 +122,28 @@ class plot_sns(Base):
         x = x.reshape(-1)
         y = y.reshape(-1)
         return x, y, label
-    
+
     def plot(self):
-        self.fig, self.ax = plt.subplots(figsize=cm2inch(*hConfig.fig_size), dpi=hConfig.dpi)
+        self.fig, self.ax = plt.subplots(
+            figsize=cm2inch(*hConfig.fig_size), dpi=hConfig.dpi
+        )
         # plot figure
         lws = self._kwargs.get("linewidths", None)
         if lws is not None:
             assert len(self.data) == len(lws)
-        
+
         lss = self._kwargs.get("linestyles", None)
         if lss is not None:
             assert len(self.data) == len(lss)
 
-        
         for i, d in enumerate(self.data):
             x, y, label = self._ppc_data(d)
             lw = lws[i] if lws is not None else 2
             ls = lss[i] if lss is not None else "-"
             sns.lineplot(x=x, y=y, label=label, linewidth=lw, ls=ls)
 
+        if self.title is not None:
+            plt.title(self.title, hConfig.title_font)
         # tick
         plt.tick_params(labelsize=hConfig.tick_size)
         labels = self.ax.get_xticklabels() + self.ax.get_yticklabels()
@@ -144,7 +153,9 @@ class plot_sns(Base):
         legend_handles, legend_labels = self.ax.get_legend_handles_labels()
         legend_dict = dict()
         legend_dict["handles"] = legend_handles
-        legend_dict["labels"] = self.legend if self.legend is not None else legend_labels
+        legend_dict["labels"] = (
+            self.legend if self.legend is not None else legend_labels
+        )
         legend_dict["columnspacing"] = 0.3
         legend_loc = self._kwargs.get("legend_loc", "best")
         legend_dict["loc"] = "best" if legend_loc is None else legend_loc
@@ -186,7 +197,9 @@ class plot_sns(Base):
         ticklabel_style = self._kwargs.get("ticklabel_style", None)
         ticklabel_style_axis = self._kwargs.get("ticklabel_style_axis", "x")
         if ticklabel_style:
-            plt.ticklabel_format(style=ticklabel_style, axis=ticklabel_style_axis, scilimits=(0, 0))
+            plt.ticklabel_format(
+                style=ticklabel_style, axis=ticklabel_style_axis, scilimits=(0, 0)
+            )
 
         log_yaxis = self._kwargs.get("log_yaxis", None)
         if log_yaxis is not None:
@@ -194,19 +207,28 @@ class plot_sns(Base):
 
         if self._kwargs.get("sub_axis", None) is not None:
             from matplotlib.patches import ConnectionPatch
-            for sub_ax_config in self._kwargs.get("sub_axis", None) :
+
+            for sub_ax_config in self._kwargs.get("sub_axis", None):
                 width = sub_ax_config.get("width", "40%")
                 height = sub_ax_config.get("height", "30%")
                 loc = sub_ax_config.get("loc", "upper right")
                 borderpad = sub_ax_config.get("borderpad", 1)
-                axins = inset_axes(self.ax, width, height , loc=loc, borderpad=borderpad)
+                axins = inset_axes(self.ax, width, height, loc=loc, borderpad=borderpad)
                 # plot original data
                 # plt.gca().set_prop_cycle(None)
                 for i, d in enumerate(self.data):
                     x, y, label = self._ppc_data(d)
                     lw = lws[i] if lws is not None else 2
                     ls = lss[i] if lss is not None else "-"
-                    sns.lineplot(x=x, y=y, label=label, linewidth=lw, ls=ls, ax=axins, legend=False)
+                    sns.lineplot(
+                        x=x,
+                        y=y,
+                        label=label,
+                        linewidth=lw,
+                        ls=ls,
+                        ax=axins,
+                        legend=False,
+                    )
                 plt.tick_params(labelsize=hConfig.tick_size)
                 labels = axins.get_xticklabels() + axins.get_yticklabels()
                 [label.set_fontname(hConfig.tick_label_font) for label in labels]
@@ -221,18 +243,18 @@ class plot_sns(Base):
                 tx1 = sub_xlim[1]
                 ty0 = sub_ylim[0]
                 ty1 = sub_ylim[1]
-                sx = [tx0,tx1,tx1,tx0,tx0]
-                sy = [ty0,ty0,ty1,ty1,ty0]
+                sx = [tx0, tx1, tx1, tx0, tx0]
+                sy = [ty0, ty0, ty1, ty1, ty0]
                 print(sx, sy)
-                self.ax.plot(sx,sy,"black", lw=1)
+                self.ax.plot(sx, sy, "black", lw=1)
 
                 # 画两条线
 
-                link_dict={
-                    "ur": (tx1,ty1),
-                    "ul": (tx0,ty1),
-                    "ll": (tx0,ty0),
-                    "lr": (tx1,ty0),
+                link_dict = {
+                    "ur": (tx1, ty1),
+                    "ul": (tx0, ty1),
+                    "ll": (tx0, ty0),
+                    "lr": (tx1, ty0),
                 }
 
                 linke = sub_ax_config.get("links", [("ul", "ll"), ("ur", "lr")])
@@ -240,10 +262,14 @@ class plot_sns(Base):
                 for start, end in linke:
                     xy = link_dict[start]
                     xy2 = link_dict[end]
-                    con = ConnectionPatch(xyA=xy2,xyB=xy,coordsA="data",coordsB="data",
-                            axesA=axins,axesB=self.ax, color="black", lw=1)
+                    con = ConnectionPatch(
+                        xyA=xy2,
+                        xyB=xy,
+                        coordsA="data",
+                        coordsB="data",
+                        axesA=axins,
+                        axesB=self.ax,
+                        color="black",
+                        lw=1,
+                    )
                     axins.add_artist(con)
-
-               
-
-
