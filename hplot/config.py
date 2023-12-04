@@ -1,6 +1,10 @@
 class Config:
     def __init__(self):
+        self.reset()
+
+    def reset(self):
         self.fig_size = (8.5, 6.5)
+        self.fig_size_for_double_y = (8.5, 8.4)
         self.dpi = 600
         self.pad = 0.2
 

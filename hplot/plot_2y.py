@@ -134,7 +134,7 @@ class plot_2y(Base):
 
     def plot(self):
         self.fig, self.ax = plt.subplots(
-            figsize=cm2inch(*hConfig.fig_size), dpi=hConfig.dpi
+            figsize=cm2inch(*hConfig.fig_size_for_double_y), dpi=hConfig.dpi
         )
         # plot figure
         lws = self._kwargs.get("linewidths", None)
