@@ -146,4 +146,9 @@ class plot_heatmap(Base):
         return pos
 
     def _plot_lines(self, x, y, c, width):
-        plt.plot(x, y, c=c, linewidth=width)
+        # xtick_labels = self._kwargs.get("xtick_labels", None)
+        # ytick_labels = self._kwargs.get("ytick_labels", None)
+        xt = self._tick2pos(x, self.x)
+        yt = self._tick2pos(y, self.y)
+        # print(xt, yt)
+        plt.scatter(xt, yt, c=c, marker=".", s=width)
