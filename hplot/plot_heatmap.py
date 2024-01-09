@@ -80,7 +80,9 @@ class plot_heatmap(Base):
             rc("text", usetex=True)
 
     def plot(self):
-        self.fig, self.ax = plt.subplots(figsize=cm2inch(*hConfig.fig_size), dpi=hConfig.dpi)
+        self.fig, self.ax = plt.subplots(
+            figsize=cm2inch(*hConfig.fig_size), dpi=hConfig.dpi
+        )
         # plot figure
         if isinstance(self.cmap, str):
             cmap = plt.get_cmap(self.cmap)
@@ -111,6 +113,11 @@ class plot_heatmap(Base):
             pos_list_y = self._tick2pos(ytick_labels, self.y)
             plt.yticks(pos_list_y, ytick_labels)
 
+        lines = self._kwargs.get("lines", [])
+
+        for line in lines:
+            self._plot_lines(**line)
+
         if self.xlabel:
             plt.xlabel(self.xlabel, hConfig.label_font)
         if self.ylabel:
@@ -137,3 +144,6 @@ class plot_heatmap(Base):
             label = np.argmin(dist)
             pos.append(int(label))
         return pos
+
+    def _plot_lines(self, x, y, c, width):
+        plt.plot(x, y, c=c, linewidth=width)
