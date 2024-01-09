@@ -33,5 +33,6 @@ def test_plot_sns():
         display=False,
     )
 
+
 if __name__ == "__main__":
     test_plot_sns()

@@ -9,7 +9,8 @@ from matplotlib import rcParams
 
 from hplot.config import hConfig
 from hplot.utils import cm2inch
-from hplot.base import Base 
+from hplot.base import Base
+
 
 class plot_box(Base):
     def __init__(
@@ -19,8 +20,8 @@ class plot_box(Base):
         *,
         xlabel: Optional[str] = None,
         ylabel: Optional[str] = None,
-        width: Optional[float] =0.5,
-        linewidth: Optional[float] =1.0,
+        width: Optional[float] = 0.5,
+        linewidth: Optional[float] = 1.0,
         display: Optional[bool] = False,
         **kwargs
     ):
@@ -64,10 +65,10 @@ class plot_box(Base):
             self.data = [self.data]
         self.num_data = len(self.data)
 
-
         # use tex to render fonts, tex install required
         if hConfig.usetex:
             from matplotlib import rc
+
             rc("font", **{"family": "serif", "serif": ["Times New Roman"]})
             rc("text", usetex=True)
 
@@ -92,4 +93,3 @@ class plot_box(Base):
             plt.xlabel(self.xlabel, fontdict=hConfig.label_font)
         if self.ylabel is not None:
             plt.ylabel(self.ylabel, fontdict=hConfig.label_font)
-

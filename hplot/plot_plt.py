@@ -86,14 +86,10 @@ class plot_plt(Base):
         cl = self._kwargs.get("color_list", None)
         if (cl is None) or len(cl) < self.num_data:
             tableau_colors = cycle(mcolors.TABLEAU_COLORS)
-            self._kwargs["color_list"] = [
-                next(tableau_colors) for _ in range(self.num_data)
-            ]
+            self._kwargs["color_list"] = [next(tableau_colors) for _ in range(self.num_data)]
 
     def plot(self):
-        self.fig, self.ax = plt.subplots(
-            figsize=cm2inch(*hConfig.fig_size), dpi=hConfig.dpi
-        )
+        self.fig, self.ax = plt.subplots(figsize=cm2inch(*hConfig.fig_size), dpi=hConfig.dpi)
         lws = self._kwargs.get("linewidths", None)
         if lws is not None:
             assert len(self.data) == len(lws)

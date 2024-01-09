@@ -8,7 +8,7 @@ def test_plot_sns():
     x = np.linspace(-10, 10, 100)
     y = np.linspace(-10, 10, 100)
     X, Y = np.meshgrid(x, y)
-    Z = X ** 2 + Y ** 2
+    Z = X**2 + Y**2
     plot_heatmap(
         x=x,
         y=y,
@@ -22,5 +22,7 @@ def test_plot_sns():
         levels=[10],
         level_colors=["red"],
     )
+
+
 if __name__ == "__main__":
     test_plot_sns()

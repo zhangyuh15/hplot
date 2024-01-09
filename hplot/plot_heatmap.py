@@ -10,25 +10,26 @@ from hplot.utils import cm2inch
 from hplot.base import Base
 from matplotlib.colors import Colormap
 
+
 class plot_heatmap(Base):
     def __init__(
-            self,
-            x: Union[np.ndarray, List[float]],
-            y: Union[np.ndarray, List[float]],
-            z: Union[np.ndarray, List[List[float]]],
-            fname: str,
-            *,
-            cmap: Union[str, Colormap] = "BrBG",
-            vmin: float ,
-            vmax: float,
-            center:float=None,
-            levels: Optional[List[float]]=None,
-            level_colors: Optional[List[str]]=None,
-            xlabel: str=None,
-            ylabel:str=None,
-            display:bool=False,
-            **kwargs,
-            ):
+        self,
+        x: Union[np.ndarray, List[float]],
+        y: Union[np.ndarray, List[float]],
+        z: Union[np.ndarray, List[List[float]]],
+        fname: str,
+        *,
+        cmap: Union[str, Colormap] = "BrBG",
+        vmin: float,
+        vmax: float,
+        center: float = None,
+        levels: Optional[List[float]] = None,
+        level_colors: Optional[List[str]] = None,
+        xlabel: str = None,
+        ylabel: str = None,
+        display: bool = False,
+        **kwargs,
+    ):
         """
         :param x: Union[np.ndarray, List[float]]
         :param y: Union[np.ndarray, List[float]]
@@ -74,6 +75,7 @@ class plot_heatmap(Base):
         # use tex to render fonts, tex install required
         if hConfig.usetex:
             from matplotlib import rc
+
             rc("font", **{"family": "serif", "serif": ["Times New Roman"]})
             rc("text", usetex=True)
 
@@ -114,7 +116,6 @@ class plot_heatmap(Base):
         if self.ylabel:
             plt.ylabel(self.ylabel, hConfig.label_font)
 
-    
         plt.tick_params(labelsize=hConfig.tick_size)
         labels = self.ax.get_xticklabels() + self.ax.get_yticklabels()
         [label.set_fontname(hConfig.tick_label_font) for label in labels]

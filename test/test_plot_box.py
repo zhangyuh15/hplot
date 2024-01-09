@@ -11,5 +11,6 @@ def test_plot_box():
 
     plot_box(data, fname="figure/plot_box_example.png", display=False, width=0.2, linewidth=0.1)
 
+
 if __name__ == "__main__":
     test_plot_box()

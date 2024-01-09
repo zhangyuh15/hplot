@@ -124,9 +124,7 @@ class plot_sns(Base):
         return x, y, label
 
     def plot(self):
-        self.fig, self.ax = plt.subplots(
-            figsize=cm2inch(*hConfig.fig_size), dpi=hConfig.dpi
-        )
+        self.fig, self.ax = plt.subplots(figsize=cm2inch(*hConfig.fig_size), dpi=hConfig.dpi)
         # plot figure
         lws = self._kwargs.get("linewidths", None)
         if lws is not None:
@@ -153,9 +151,7 @@ class plot_sns(Base):
         legend_handles, legend_labels = self.ax.get_legend_handles_labels()
         legend_dict = dict()
         legend_dict["handles"] = legend_handles
-        legend_dict["labels"] = (
-            self.legend if self.legend is not None else legend_labels
-        )
+        legend_dict["labels"] = self.legend if self.legend is not None else legend_labels
         legend_dict["columnspacing"] = 0.3
         legend_loc = self._kwargs.get("legend_loc", "best")
         legend_dict["loc"] = "best" if legend_loc is None else legend_loc
@@ -197,9 +193,7 @@ class plot_sns(Base):
         ticklabel_style = self._kwargs.get("ticklabel_style", None)
         ticklabel_style_axis = self._kwargs.get("ticklabel_style_axis", "x")
         if ticklabel_style:
-            plt.ticklabel_format(
-                style=ticklabel_style, axis=ticklabel_style_axis, scilimits=(0, 0)
-            )
+            plt.ticklabel_format(style=ticklabel_style, axis=ticklabel_style_axis, scilimits=(0, 0))
 
         log_yaxis = self._kwargs.get("log_yaxis", None)
         if log_yaxis is not None:
